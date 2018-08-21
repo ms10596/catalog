@@ -39,4 +39,6 @@ items.append(Item(name="Slings and Arrows", category="Comedy", description="In t
 items.append(Item(name="I, Claudius ", category="Biography", description="The history of the Roman Empire as experienced by one of its rulers."))
 items.append(Item(name="Rome", category="History", description="A down-to-earth account of the lives of both illustrious and ordinary Romans set in the last days of the Roman Republic."))
 
-
+for i in items:
+    session.add(i)
+session.commit()
