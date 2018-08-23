@@ -32,6 +32,9 @@ def categoryPage(categoryName):
         output += str(item)[3:-3]
         output += '</br>'
     return output
-
+@app.route('/catalog/<string:categoryName>/<string:itemName>')
+def itemPage(categoryName, itemName):
+    description = str(session.query(Item.description).filter_by(category=categoryName, name=itemName).one())[3:-3]
+    return description
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port = 5000)
