@@ -13,18 +13,11 @@ session = DBSession()
 @app.route('/')
 def homepage():
     categories = session.query(Item.category).distinct()
-    output = ''
-    for category in categories:
-        output += str(category)[3:-3]
-        output += '</br>'
+
 
     movies = session.query(Item).order_by(Item.id.desc()).all()
-    for movie in movies:
-        output += str(movie.name)
-        output += '('
-        output += str(movie.category)
-        output += ')</br>'
-    return output
+
+    return render_template('menu.html', categories=categories, movies=movies)
 
 @app.route('/catalog/<string:categoryName>/items')
 def categoryPage(categoryName):
@@ -56,7 +49,7 @@ def editPage(itemName):
 @app.route('/catalog/<string:itemName>/delete')
 def deletePage(itemName):
     if(request.method == 'POST'):
-        session.query(itemName).delete()
+        session.query(Item).delete({"name":request.form['name']})
         session.commit()
     else:
         return "page to delete item"
@@ -68,4 +61,4 @@ def json():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port = 5000)
+    app.run(host='0.0.0.0', port = 8000)

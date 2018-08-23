@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+</head>
+<body bgcolor="aqua">
+<h1>Categories</h1>
+{% for i in categories %}
+{{ i.category }}<br>
+{% endfor %}
+<h1>Latest items</h1>
+{% for i in movies %}
+{{ i.name }}({{ i.category }})<br>
+{% endfor %}
+</body>
+</html>
