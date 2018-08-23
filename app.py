@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Item
@@ -46,20 +46,25 @@ def addPage():
         session.commit()
     else:
         return "page to create new Item"
-@app.route('catalog/<string:itemName>/edit')
+@app.route('/catalog/<string:itemName>/edit')
 def editPage(itemName):
     if(request.method == 'POST'):
         session.query(itemName).update({"name":request.form['name'], "category":request.form['category'], "description":request.form['description']})
         session.commit()
     else:
         return "page to edit item"
-@app.route('catalog/<string:itemName>/delete')
+@app.route('/catalog/<string:itemName>/delete')
 def deletePage(itemName):
     if(request.method == 'POST'):
         session.query(itemName).delete()
         session.commit()
     else:
         return "page to delete item"
+@app.route('/catalog.json')
+def json():
+    items = session.query(Item).all()
+    return jsonify(items=[i.serialize for i in items])
+
 
 
 if __name__ == '__main__':

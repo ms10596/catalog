@@ -17,13 +17,13 @@ class User(Base):
     name = Column(String)
     password = Column(String)
 
-    # @property
-    # def serialize(self):
-    #     return {
-    #         'email' : self.email,
-    #         'name' : self.name,
-    #         'password' : self.password,
-    #     }
+    @property
+    def serialize(self):
+        return {
+            'email': self.email,
+            'name': self.name,
+            'password': self.password,
+        }
 
 
 class Item(Base):
@@ -34,14 +34,14 @@ class Item(Base):
     category = Column(String)
     description = Column(String)
 
-    # @property
-    # def serialize(self):
-    #     return {
-    #         'id' : self.id,
-    #         'name' : self.name,
-    #         'category' : self.category,
-    #         'description' : self.description
-    #     }
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'category': self.category,
+            'description': self.description
+        }
 
 
 Base.metadata.create_all(engine)
