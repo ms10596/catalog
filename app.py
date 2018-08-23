@@ -46,6 +46,20 @@ def addPage():
         session.commit()
     else:
         return "page to create new Item"
+@app.route('catalog/<string:itemName>/edit')
+def editPage(itemName):
+    if(request.method == 'POST'):
+        session.query(itemName).update({"name":request.form['name'], "category":request.form['category'], "description":request.form['description']})
+        session.commit()
+    else:
+        return "page to edit item"
+@app.route('catalog/<string:itemName>/delete')
+def deletePage(itemName):
+    if(request.method == 'POST'):
+        session.query(itemName).delete()
+        session.commit()
+    else:
+        return "page to delete item"
 
 
 if __name__ == '__main__':
