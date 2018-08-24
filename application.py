@@ -38,7 +38,7 @@ def addPage():
                        description=request.form['description'])
         session.add(newItem)
         session.commit()
-        return True
+        return redirect('/', code=302)
     else:
         return render_template('addItem.html')
 
@@ -72,6 +72,28 @@ def deletePage(itemName):
 def json():
     items = session.query(Item).all()
     return jsonify(items=[i.serialize for i in items])
+
+
+@app.route('/catalog/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        print(request.form['email'])
+        newUser = User(email=request.form['email'], name=request.form['name'], password=request.form['password'])
+        session.add(newUser)
+        session.commit()
+        return redirect('/', code=302)
+    else:
+        return render_template('registerUser.html')
+
+
+@app.route('/catalog/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        loginUser = session.query(User).filter_by(email=request.form['email'], password=request.form['password'])
+        if (loginUser):
+            return redirect('/', code=302)
+    else:
+        return render_template('loginUser.html')
 
 
 if __name__ == '__main__':
