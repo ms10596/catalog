@@ -1,21 +1,23 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, Text
 
-engine = create_engine('sqlite:///catalog')
+engine = create_engine('sqlite:///catalog.db')
 
 Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'Users'
+    __tablename__ = 'user'
 
-    email = Column(String, primary_key=True)
-    name = Column(String)
-    password = Column(String)
+    id = Column(Integer, primary_key=True)
+    email = Column(Text, unique=True)
+    name = Column(Text)
+    password = Column(Text)
 
     @property
     def serialize(self):
@@ -26,13 +28,23 @@ class User(Base):
         }
 
 
-class Item(Base):
-    __tablename__ = 'Items'
+class Category(Base):
+    __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    category = Column(String)
-    description = Column(String)
+    category = Column(Text, unique=True)
+
+
+class Item(Base):
+    __tablename__ = 'item'
+
+    id = Column(Integer, primary_key=True)
+    userId = Column(Integer, ForeignKey('user.id'))
+    name = Column(Text)
+    categoryId = Column(Integer, ForeignKey('category.id'))
+    description = Column(Text)
+    user = relationship(User)
+    category = relationship(Category)
 
     @property
     def serialize(self):

@@ -7,11 +7,11 @@
 <body bgcolor="aqua">
 <h1>Categories</h1>
 {% for i in categories %}
-{{ i.category }}<br>
+    <a href="/catalog/{{ i.category }}/items/">{{ i.category }}</a><br>
 {% endfor %}
 <h1>Latest items</h1>
 {% for i in movies %}
-{{ i.name }}({{ i.category }})<br>
+    <a href="/catalog/{{ i.Category.category }}/{{ i.Item.name }}/">{{ i.Item.name }}({{ i.Category.category }})</a><br>
 {% endfor %}
 </body>
 </html>

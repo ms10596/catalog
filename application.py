@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, User, Item
+from database_setup import Base, User, Item, Category
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///catalog')
+engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -13,9 +13,10 @@ session = DBSession()
 
 
 @app.route('/')
+@app.route('/catalog/')
 def homepage():
-    categories = session.query(Item.category).distinct()
-    movies = session.query(Item).order_by(Item.id.desc()).all()
+    categories = session.query(Category)
+    movies = session.query(Item, Category).join(Category).all()
     return render_template('menu.html', categories=categories, movies=movies)
 
 
@@ -97,4 +98,6 @@ def login():
 
 
 if __name__ == '__main__':
+    app.debug = True
+    app.secret_key = 'hello'
     app.run(host='0.0.0.0', port=8000)
