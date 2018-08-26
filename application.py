@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session as login_session, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
