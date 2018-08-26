@@ -7,9 +7,9 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-categories = [Category(category="Crime"), Category(category="Drama"), Category(category="Action"), Category(category="Thriller"), Category(category="Comedy"),
-              Category(category="Adventure"), Category(category="Fantasy"), Category(category="History"), Category(category="Animation"),
-              Category(category="Horror"), Category(category="Mystery"), Category(category="Biography")]
+categories = [Category(name="Crime"), Category(name="Drama"), Category(name="Action"), Category(name="Thriller"), Category(name="Comedy"),
+              Category(name="Adventure"), Category(name="Fantasy"), Category(name="History"), Category(name="Animation"),
+              Category(name="Horror"), Category(name="Mystery"), Category(name="Biography")]
 for category in categories:
     session.add(category)
 session.commit()

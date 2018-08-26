@@ -13,5 +13,6 @@
 {% for i in movies %}
     <a href="/catalog/{{ i.Category.name }}/{{ i.Item.name }}/">{{ i.Item.name }}({{ i.Category.name }})</a><br>
 {% endfor %}
+<a href="/catalog/add/">add item</a>
 </body>
 </html>
