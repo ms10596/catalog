@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Categories</title>
+    <title>Catalog</title>
 </head>
 <body bgcolor="aqua">
 <h1>Categories</h1>
@@ -14,4 +14,9 @@
     <a href="/catalog/{{ i.Category.name }}/{{ i.Item.name }}/">{{ i.Item.name }}({{ i.Category.name }})</a><br>
 {% endfor %}
 </body>
+
+<a type="button" href="/catalog/login" value="Login">Login</a>
+<a type="button" href="/catalog/register" value="Register">Register</a>
+
+
 </html>

@@ -17,7 +17,7 @@ session = DBSession()
 def homepage():
     categories = session.query(Category)
     movies = session.query(Item, Category).join(Category).all()
-    if ('email' in login_session):
+    if ('id' in login_session):
         return render_template('loggedInMenu.html', categories=categories, movies=movies)
     else:
         return render_template('menu.html', categories=categories, movies=movies)
@@ -31,20 +31,24 @@ def categoryPage(categoryName):
 
 @app.route('/catalog/<string:categoryName>/<string:itemName>/')
 def itemPage(categoryName, itemName):
-    description = session.query(Item, Category).join(Category).filter(Category.name == categoryName).filter(
-        Item.name == itemName).one()
-    return render_template('item.html', description=description)
+    description = session.query(Item, Category).join(Category).filter(Category.name == categoryName).filter(Item.name == itemName).one()
+    print (login_session['id'] )
+    print (description.Item.userId)
+    if 'id' in login_session and description.Item.userId == login_session['id']:
+        return render_template('authItem.html', description=description)
+    else:
+        return render_template('item.html', description=description)
+
 
 
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def addPage():
     if (request.method == 'POST'):
-        email = login_session['email']
-        #categoryid = session.query(Category).filter(Category.name == request.form['category']).one()
-        print(email)
+        id = login_session['id']
+        categoryid = session.query(Category).filter(Category.name == request.form['category']).one()
         loginUser = session.query(User).one()
         print(loginUser)
-        newItem = Item(name=request.form['name'], categoryId=1,
+        newItem = Item(name=request.form['name'], categoryId=categoryid.id,
                        description=request.form['description'], userId=loginUser.id)
         session.add(newItem)
         session.commit()
@@ -58,6 +62,8 @@ def addPage():
 def editPage(itemName):
     if (request.method == 'POST'):
         item = session.query(Item).filter_by(name=itemName).one()
+        if(login_session['id'] != item.userId):
+            return redirect('/', code=302)
         item.name = request.form['name']
         item.category = request.form['category']
         item.description = request.form['description']
@@ -65,6 +71,9 @@ def editPage(itemName):
         session.commit()
         return redirect('/', code=302)
     else:
+        item = session.query(Item).filter_by(name=itemName).one()
+        if (login_session['id'] != item.userId):
+            return redirect('/', code=302)
         return render_template('editItem.html')
 
 
@@ -72,10 +81,15 @@ def editPage(itemName):
 def deletePage(itemName):
     if (request.method == 'POST'):
         item = session.query(Item).filter_by(name=itemName).one()
+        if (login_session['id'] != item.userId):
+            return redirect('/', code=302)
         session.delete(item)
         session.commit()
         return redirect('/', code=302)
     else:
+        item = session.query(Item).filter_by(name=itemName).one()
+        if (login_session['id'] != item.userId):
+            return redirect('/', code=302)
         return render_template('deleteItem.html')
 
 
@@ -88,7 +102,6 @@ def json():
 @app.route('/catalog/register/', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        print(request.form['email'])
         newUser = User(email=request.form['email'], name=request.form['name'], password=request.form['password'])
         session.add(newUser)
         session.commit()
@@ -100,12 +113,9 @@ def register():
 @app.route('/catalog/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        print(request.form['email'] + request.form['password'])
-        loginUser = session.query(User).filter(User.email == request.form['email'],
-                                               User.password == request.form['password'])
-        print(loginUser)
+        loginUser = session.query(User).filter(User.email == request.form['email']).filter(User.password == request.form['password']).one()
         if loginUser:
-            login_session['email'] = request.form['email']
+            login_session['id'] = loginUser.id
             flash("logged in")
             return redirect('/', code=302)
         else:
@@ -116,9 +126,9 @@ def login():
         return render_template('loginUser.html')
 
 
-@app.route('/catalog/logout', methods=['GET', 'POST'])
+@app.route('/catalog/logout/')
 def logout():
-    login_session.pop()
+    login_session.pop('id')
     flash("logged out")
     return redirect('/', code=302)
 

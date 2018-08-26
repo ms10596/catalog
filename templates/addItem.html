@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+{#{% with messages = get_flashed_messages() %}#}
+{#    {% if messages %}#}
+{#    {% for message in messages %}#}
+{#        {{ message }}#}
+{#    {% endfor %}#}
+{#{% endwith %}#}
 <body>
 <form method="post">
     <input type="text" name="name">
