@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Categories</title>
 </head>
-<body bgcolor="aqua">
+<body style="font-size: 21px">
+<h1 style="color: red">Welcome {{ email }}</h1>
 <h1>Categories</h1>
 {% for i in categories %}
     <a href="/catalog/{{ i.name }}/items/">{{ i.name }}</a><br>
@@ -13,7 +14,8 @@
 {% for i in movies %}
     <a href="/catalog/{{ i.Category.name }}/{{ i.Item.name }}/">{{ i.Item.name }}({{ i.Category.name }})</a><br>
 {% endfor %}
-<a href="/catalog/add/">add item</a>
-<a href="/catalog/logout/">logout</a>
+<br><br><br>
+<h3><a href="/catalog/add/">>Add item</a></h3><br>
+<h3><a href="/catalog/logout/">>Logout</a></h3>
 </body>
 </html>

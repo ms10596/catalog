@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <title>Catalog</title>
 </head>
-<body bgcolor="aqua">
+<body style="font-size: 21px">
 <h1>Categories</h1>
 {% for i in categories %}
     <a href="/catalog/{{ i.name }}/items/">{{ i.name }}</a><br>
 {% endfor %}
+
 <h1>Latest items</h1>
 {% for i in movies %}
     <a href="/catalog/{{ i.Category.name }}/{{ i.Item.name }}/">{{ i.Item.name }}({{ i.Category.name }})</a><br>
 {% endfor %}
+
 </body>
-
-<a type="button" href="/catalog/login" value="Login">Login</a>
-<a type="button" href="/catalog/register" value="Register">Register</a>
-
+<div>
+    <br><br><br>
+    <h3><a type="button" href="/catalog/login" value="Login">>Login</a></h3><br>
+    <h3><a type="button" href="/catalog/register" value="Register">>Register</a></h3>
+</div>
 
 </html>

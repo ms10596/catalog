@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ items[0].Category.name }}</title>
 </head>
-<body>
+<body style="font-size: 21px">
 {% for i in items %}
-    {{ i.Item.name }}<br>
+    <a href="/catalog/{{ i.Category.name }}/{{ i.Item.name }}" >{{ i.Item.name }}</a><br>
 {% endfor %}
 </body>
 </html>
