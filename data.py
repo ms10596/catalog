@@ -12,8 +12,7 @@ session = DBSession()
 categories = [Category(name="Crime"), Category(name="Drama"), Category(name="Action"), Category(name="Thriller"),
               Category(name="Comedy"), Category(name="Adventure"), Category(name="Animation"),
               Category(name="Horror"), Category(name="Mystery"), Category(name="Biography")]
-users = [User(email="one@catalog.com", name="one", password="one"),
-         User(email="two@catalog.com", name="two", password="two")]
+users = [User(email="ms10596@gmail.com", name="Mohamed Sayed", password="password")]
 
 items = []
 items.append(Item(name="Twin Peaks", categoryId=1, userId=1,
