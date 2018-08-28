@@ -8,6 +8,7 @@ It is mainly a content management system that manages tv series.
 3. SQLITE
 4. SQLAlchemy
 5. HTML
+6. Google sign-in
 
 # Environment
 1. [Download and install VirtualBox.](https://www.virtualbox.org/wiki/Download_Old_Builds_5_2)

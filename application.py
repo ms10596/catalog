@@ -4,12 +4,12 @@ from flask import Flask, render_template, request, redirect, jsonify, session as
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Item, Category
-import random, string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from flask import make_response
+import random, string
 import httplib2
 import json
-from flask import make_response
 import requests
 
 app = Flask(__name__)
@@ -25,6 +25,10 @@ session = DBSession()
 @app.route('/')
 @app.route('/catalog/')
 def homepage():
+    """
+    Returns Homepage for a visitor or a signed-in user.
+    Depends on the login session id
+    """
     categories = session.query(Category)
     movies = session.query(Item, Category).join(Category).order_by(Item.id.desc()).limit(10).all()
     if 'id' in login_session:
@@ -36,12 +40,21 @@ def homepage():
 
 @app.route('/catalog/<string:categoryName>/items/')
 def categoryPage(categoryName):
+    """
+    Returns page of items related to the given category name
+    :param categoryName:
+    """
     items = session.query(Item, Category).join(Category).filter(Category.name == categoryName).all()
     return render_template('categoryItems.html', items=items)
 
 
 @app.route('/catalog/<string:categoryName>/<string:itemName>/')
 def itemPage(categoryName, itemName):
+    """
+    Returns page of a specific item from a specific category
+    :param categoryName:
+    :param itemName:
+    """
     description = session.query(Item, Category).join(Category).filter(Category.name == categoryName).filter(
         Item.name == itemName).one()
     if 'id' in login_session and description.Item.userId == login_session['id']:
@@ -52,6 +65,9 @@ def itemPage(categoryName, itemName):
 
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def addPage():
+    """
+    Return the Add Item page that allows signedin user to add items
+    """
     if request.method == 'POST':
         if 'id' in login_session:
             newItem = Item()
@@ -75,6 +91,10 @@ def addPage():
 
 @app.route('/catalog/<string:itemName>/edit/', methods=['GET', 'POST'])
 def editPage(itemName):
+    """
+    Returns page that allows authorised user to edit an item
+    :param itemName:
+    """
     if request.method == 'POST':
         item = session.query(Item).filter_by(name=itemName).one()
         if 'id' in login_session and login_session['id'] == item.userId:
@@ -96,6 +116,10 @@ def editPage(itemName):
 
 @app.route('/catalog/<string:itemName>/delete/', methods=['GET', 'POST'])
 def deletePage(itemName):
+    """
+     Returns page that allows authorised user to delete an item
+    :param itemName:
+    """
     if request.method == 'POST':
         item = session.query(Item).filter_by(name=itemName).one()
         if 'id' in login_session and login_session['id'] == item.userId:
@@ -111,12 +135,19 @@ def deletePage(itemName):
 
 @app.route('/catalog.json/')
 def jsonFile():
+    """
+    Returns json object of the whole data
+    """
     items = session.query(Item, Category).join(Category).order_by(Category.id)
     return jsonify(items=[i.Item.serialize for i in items])
 
 
 @app.route('/catalog/register/', methods=['GET', 'POST'])
 def register():
+    """
+    Return page that allows new visitors to sign up in the website
+    Should have a google account
+    """
     if request.method == 'POST':
         newUser = User(email=request.form['email'], name=request.form['name'], password=request.form['password'])
         session.add(newUser)
@@ -128,6 +159,9 @@ def register():
 
 @app.route('/catalog/login/')
 def showLogin():
+    """
+    Returns login page and create a state
+    """
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -137,6 +171,9 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    Authenticate the logged in user through google login and OAuth2
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -226,6 +263,9 @@ def gconnect():
 
 @app.route('/catalog/logout/')
 def gdisconnect():
+    """
+    Logout the logged in user
+    """
     access_token = login_session.get('access_token')
     if access_token is None:
         print
