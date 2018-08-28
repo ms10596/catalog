@@ -19,9 +19,13 @@ It is mainly a content management system that manages tv series.
 
 # Setup
 1. After cloning the repo open it through your terminal
-2. `python database_setup.py` to create the .db file
-3. `python data.py` to initialize database with data
-4. `python application.py` to start the app
+2. `pip install -r requirements.txt`
+3. `python database_setup.py` to create the .db file
+4. `python data.py` to initialize database with data
+5. `python application.py` to start the app
+6. The app should be running on [http://0.0.0.0:8000/]
+
+
 
 # Acknlodgments
 Sometimes the sqlalchemy raises errors, The errors disappear when refreshing the page :)
