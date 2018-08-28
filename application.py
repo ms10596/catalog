@@ -15,7 +15,8 @@ import json
 import requests
 
 app = Flask(__name__)
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "catalog"
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
@@ -32,12 +33,17 @@ def homepage():
     Depends on the login session id
     """
     categories = session.query(Category)
-    movies = session.query(Item, Category).join(Category).order_by(Item.id.desc()).limit(10).all()
+    movies = session.query(Item, Category).join(Category)\
+        .order_by(Item.id.desc()).limit(10).all()
     if 'id' in login_session:
-        user = session.query(User).filter(User.id == login_session['id']).first()
-        return render_template('loggedInMenu.html', categories=categories, movies=movies, email=user.email)
+        user = session.query(User)\
+            .filter(User.id == login_session['id']).first()
+        return render_template('loggedInMenu.html',
+                               categories=categories,
+                               movies=movies, email=user.email)
     else:
-        return render_template('menu.html', categories=categories, movies=movies)
+        return render_template('menu.html',
+                               categories=categories, movies=movies)
 
 
 @app.route('/catalog/<string:categoryName>/items/')
@@ -46,7 +52,8 @@ def categoryPage(categoryName):
     Returns page of items related to the given category name
     :param categoryName:
     """
-    items = session.query(Item, Category).join(Category).filter(Category.name == categoryName).all()
+    items = session.query(Item, Category)\
+        .join(Category).filter(Category.name == categoryName).all()
     return render_template('categoryItems.html', items=items)
 
 
@@ -57,9 +64,11 @@ def itemPage(categoryName, itemName):
     :param categoryName:
     :param itemName:
     """
-    description = session.query(Item, Category).join(Category).filter(Category.name == categoryName).filter(
-        Item.name == itemName).one()
-    if 'id' in login_session and description.Item.userId == login_session['id']:
+    description = session.query(Item, Category)\
+        .join(Category).filter(Category.name == categoryName)\
+        .filter(Item.name == itemName).one()
+    if 'id' in login_session and \
+            description.Item.userId == login_session['id']:
         return render_template('authItem.html', description=description)
     else:
         return render_template('item.html', description=description)
@@ -74,7 +83,8 @@ def addPage():
         if 'id' in login_session:
             newItem = Item()
             if request.form['category']:
-                newItem.categoryId = session.query(Category).filter(Category.name == request.form['category']).one().id
+                newItem.categoryId = session.query(Category)\
+                    .filter(Category.name == request.form['category']).one().id
             if request.form['name']:
                 newItem.name = request.form['name']
             if request.form['description']:
@@ -101,7 +111,8 @@ def editPage(itemName):
         item = session.query(Item).filter_by(name=itemName).one()
         if 'id' in login_session and login_session['id'] == item.userId:
             if request.form['category']:
-                item.categoryId = session.query(Category).filter(Category.name == request.form['category']).one()
+                item.categoryId = session.query(Category)\
+                    .filter(Category.name == request.form['category']).one()
             if request.form['name']:
                 item.name = request.form['name']
             if request.form['description']:
@@ -150,7 +161,8 @@ def categoryJson(categoryName):
     Returns json of items related to the given category name
     :param categoryName:
     """
-    items = session.query(Item, Category).join(Category).filter(Category.name == categoryName).all()
+    items = session.query(Item, Category)\
+        .join(Category).filter(Category.name == categoryName).all()
     return jsonify(items=[i.Item.serialize for i in items])
 
 
@@ -161,7 +173,8 @@ def itemPagejson(itemName):
     :param categoryName:
     :param itemName:
     """
-    description = session.query(Item, Category).join(Category).filter(Item.name == itemName).one()
+    description = session.query(Item, Category)\
+        .join(Category).filter(Item.name == itemName).one()
     return jsonify(description.Item.serialize)
 
 
@@ -172,7 +185,9 @@ def register():
     Should have a google account
     """
     if request.method == 'POST':
-        newUser = User(email=request.form['email'], name=request.form['name'], password=request.form['password'])
+        newUser = User(email=request.form['email'],
+                       name=request.form['name'],
+                       password=request.form['password'])
         session.add(newUser)
         session.commit()
         return redirect('/', code=302)
@@ -248,8 +263,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -263,9 +278,12 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-    currentUser = session.query(User).filter(User.email == data['email']).first()
+    currentUser = session.query(User)\
+        .filter(User.email == data['email']).first()
     if (currentUser is None):
-        currentUser = User(email=data['email'], name=data['name'], password='password')
+        currentUser = User(email=data['email'],
+                           name=data['name'],
+                           password='password')
         session.add(currentUser)
         session.commit()
     login_session['username'] = data['name']
@@ -279,7 +297,9 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: ' \
+              '150px;-webkit-border-radius: 150px;-moz-border-radius: ' \
+              '150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print
     "done!"
@@ -295,7 +315,8 @@ def gdisconnect():
     if access_token is None:
         print
         'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print
@@ -304,7 +325,8 @@ def gdisconnect():
     'User name is: '
     print
     login_session['username']
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' \
+          '' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print
@@ -322,7 +344,8 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return redirect('/', code=302)
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
