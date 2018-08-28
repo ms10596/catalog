@@ -141,6 +141,25 @@ def jsonFile():
     items = session.query(Item, Category).join(Category).order_by(Category.id)
     return jsonify(items=[i.Item.serialize for i in items])
 
+@app.route('/catalog.json/<string:categoryName>/items/')
+def categoryJson(categoryName):
+    """
+    Returns json of items related to the given category name
+    :param categoryName:
+    """
+    items = session.query(Item, Category).join(Category).filter(Category.name == categoryName).all()
+    return jsonify(items=[i.Item.serialize for i in items])
+
+
+@app.route('/catalog.json/<string:itemName>/')
+def itemPage(itemName):
+    """
+    Returns json of a specific item from a specific category
+    :param categoryName:
+    :param itemName:
+    """
+    description = session.query(Item, Category).join(Category).filter(Item.name == itemName).one()
+    return jsonify(description.Item.serialize)
 
 @app.route('/catalog/register/', methods=['GET', 'POST'])
 def register():
