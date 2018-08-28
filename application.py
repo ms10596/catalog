@@ -1,13 +1,15 @@
 #!/usr/bin/python
 
-from flask import Flask, render_template, request, redirect, jsonify, session as login_session, flash
+from flask import Flask, render_template, request, redirect, jsonify
+from flask import session as login_session, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Item, Category
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from flask import make_response
-import random, string
+import random
+import string
 import httplib2
 import json
 import requests
@@ -32,7 +34,7 @@ def homepage():
     categories = session.query(Category)
     movies = session.query(Item, Category).join(Category).order_by(Item.id.desc()).limit(10).all()
     if 'id' in login_session:
-        user = session.query(User).filter(User.id == login_session['id']).one()
+        user = session.query(User).filter(User.id == login_session['id']).first()
         return render_template('loggedInMenu.html', categories=categories, movies=movies, email=user.email)
     else:
         return render_template('menu.html', categories=categories, movies=movies)
@@ -141,6 +143,7 @@ def jsonFile():
     items = session.query(Item, Category).join(Category).order_by(Category.id)
     return jsonify(items=[i.Item.serialize for i in items])
 
+
 @app.route('/catalog.json/<string:categoryName>/items/')
 def categoryJson(categoryName):
     """
@@ -152,7 +155,7 @@ def categoryJson(categoryName):
 
 
 @app.route('/catalog.json/<string:itemName>/')
-def itemPage(itemName):
+def itemPagejson(itemName):
     """
     Returns json of a specific item from a specific category
     :param categoryName:
@@ -160,6 +163,7 @@ def itemPage(itemName):
     """
     description = session.query(Item, Category).join(Category).filter(Item.name == itemName).one()
     return jsonify(description.Item.serialize)
+
 
 @app.route('/catalog/register/', methods=['GET', 'POST'])
 def register():
@@ -261,7 +265,9 @@ def gconnect():
     data = answer.json()
     currentUser = session.query(User).filter(User.email == data['email']).first()
     if (currentUser is None):
-        return redirect('/', code=302)
+        currentUser = User(email=data['email'], name=data['name'], password='password')
+        session.add(currentUser)
+        session.commit()
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
