@@ -16,9 +16,9 @@ import requests
 
 app = Flask(__name__)
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/var/www/catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "catalog"
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('sqlite:////var/www/catalog/catalog.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -353,4 +353,4 @@ def gdisconnect():
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'hello'
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=5000)
