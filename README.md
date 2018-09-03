@@ -12,6 +12,9 @@ It is mainly a content management system that manages tv series.
 
 
 [IP Address] (http://52.47.117.88/)
+[SSH port] (2200)
+# To login from terminal:
+`ssh grader@52.47.117.88 -p 2200 -i $private_key`
 
 [To deploy the app I used this tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 ## Software installed is available in requirements.txt in the repo
@@ -21,7 +24,6 @@ It is mainly a content management system that manages tv series.
 - Force UFW to allow only ports: 2200, 80, 123
 - catalog.conf is added to sites-available directory
 - catalog.wsgi is added to the rep to map apache with flask
-
 
 # Acknlodgments
 Sometimes the sqlalchemy raises errors, The errors disappear when refreshing the page :)
