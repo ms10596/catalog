@@ -10,21 +10,17 @@ It is mainly a content management system that manages tv series.
 5. HTML
 6. Google sign-in
 
-# Environment
-1. [Download and install VirtualBox.](https://www.virtualbox.org/wiki/Download_Old_Builds_5_2)
-2. [Download and install Vagrant.](https://www.vagrantup.com/)
-3. Create a new folder on your computer where you’ll store your system, then open that folder within your terminal.
-4. Type `vagrant init ubuntu/trusty64` to tell Vagrant what kind of Linux virtual machine you would like to run.
-5. Type `vagrant up` to download and start running the virtual machine
 
-# Setup
-1. After cloning the repo open it through your terminal
-2. `pip install -r requirements.txt`
-3. `python database_setup.py` to create the .db file
-4. `python data.py` to initialize database with data
-5. `python application.py` to start the app
-6. The app should be running on [http://0.0.0.0:8000/]
+[IP Address] (http://52.47.117.88/)
 
+[To deploy the app I used this tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+## Software installed is available in requirements.txt in the repo
+
+# Configurations
+- Change ssh port to 2200
+- Force UFW to allow only ports: 2200, 80, 123
+- catalog.conf is added to sites-available directory
+- catalog.wsgi is added to the rep to map apache with flask
 
 
 # Acknlodgments
