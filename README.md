@@ -16,8 +16,11 @@ It is mainly a content management system that manages tv series.
 # To login from terminal:
 `ssh grader@52.47.117.88 -p 2200 -i $private_key`
 
-[To deploy the app I used this tutorial](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 ## Software installed is available in requirements.txt in the repo
+
+# Resources that helped me
+1. https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+2. https://www.godaddy.com/help/changing-the-ssh-port-for-your-linux-server-7306
 
 # Configurations
 - Change ssh port to 2200
