@@ -21,6 +21,7 @@ It is mainly a content management system that manages tv series.
 # Resources that helped me
 1. https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
 2. https://www.godaddy.com/help/changing-the-ssh-port-for-your-linux-server-7306
+3. https://www.thomas-krenn.com/en/wiki/Perl_warning_Setting_locale_failed_in_Debian
 
 # Configurations
 - Change ssh port to 2200
