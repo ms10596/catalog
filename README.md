@@ -11,10 +11,10 @@ It is mainly a content management system that manages tv series.
 6. Google sign-in
 
 
-[IP Address] (http://52.47.117.88/)
+[IP Address] (http://52.47.209.202/)
 [SSH port] (2200)
 # To login from terminal:
-`ssh grader@52.47.117.88 -p 2200 -i $private_key`
+`ssh grader@52.47.209.202 -p 2200 -i $private_key`
 
 ## Software installed is available in requirements.txt in the repo
 
