@@ -31,3 +31,4 @@ It is mainly a content management system that manages tv series.
 
 # Acknlodgments
 Sometimes the sqlalchemy raises errors, The errors disappear when refreshing the page :)
+Also a server restart would help a lot
