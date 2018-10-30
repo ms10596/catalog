@@ -21,7 +21,6 @@ pyasn1-modules==0.2.2
 pycodestyle==2.4.0
 pyparsing==2.2.0
 redis==2.10.6
-requests==2.19.1
 rsa==3.4.2
 six==1.11.0
 SQLAlchemy==1.2.10
